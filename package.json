@@ -1,0 +1,32 @@
+{
+  "name": "dihseek",
+  "version": "1.0.0",
+  "description": "DeepSeek, now on Discord!",
+  "keywords": [
+    "discord",
+    "deepseek",
+    "ai",
+    "llm"
+  ],
+  "homepage": "https://github.com/coolpeter98/dihseek#readme",
+  "bugs": {
+    "url": "https://github.com/coolpeter98/dihseek/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolpeter98/dihseek.git"
+  },
+  "license": "GPL-3.0",
+  "author": "breter98",
+  "type": "ts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0"
+  }
+}
