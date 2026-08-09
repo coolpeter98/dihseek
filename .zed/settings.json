@@ -1,0 +1,23 @@
+{
+    "lsp": {
+        "luau-lsp": {
+            "settings": {
+                "luau-lsp": {
+                    "fflags": {
+                        "override": {
+                            "LuauTarjanChildLimit": "0",
+                            "LuauTypeInferIterationLimit": "0"
+                        }
+                    },
+                    "inlayHints": {
+                        "variableTypes": true,
+                        "parameterNames": "all",
+                        "functionReturnTypes": true,
+                        "typeHintMaxLength": 50,
+                        "parameterTypes": true
+                    }
+                }
+            }
+        }
+    }
+}
