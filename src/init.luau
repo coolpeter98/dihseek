@@ -4,6 +4,8 @@ local builders = require("@self/../luau_packages/builders")
 
 local env = require("@self/../.env")
 
+local prompt = require("@self/deepseek/prompt")
+
 local DISCORD_BOT_INTENTS = builders.intents
 	.new({
 		"Guilds",
@@ -19,7 +21,10 @@ local bot = discord.bot.new({
 })
 
 bot.onMessage:listen(function(message: classes.Message)
-	print(`Message sent by '{message.author.globalName}' said: '{message.content}'`)
+	local success, err = pcall(function()
+		prompt(message, message.channelId)
+	end)
+	if not success then print(err) end
 end)
 
 bot.onAllShardsReady:listenOnce(function()
