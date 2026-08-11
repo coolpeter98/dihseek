@@ -32,8 +32,15 @@ local function prompt(message: string, channel_id: string) : any
 	if response.statusCode == 200 then
 		local reply = serde.decode("json", response.body).choices[1].message.content
 		local tool_call = serde.decode("json", response.body).choices[1].message.tool_calls[1]["function"]
+
+		print(serde.decode("json", tool_call.arguments))
+
 		add_message_to_context("assistant", reply, channel_id)
-		return {reply, tool_call}
+		return {
+			reply = reply,
+			tool_name = tool_call.name,
+			tool_arguments = serde.decode("json", tool_call.arguments),
+		}
 	else
 		return `Error: {response.statusCode}`
 	end

@@ -25,15 +25,16 @@ web_request.parameters = {
     required = { "method", "url" },
 }
 
-function web_request.run(method: request_methods, url: string, headers: string?, body: string?) : string
+function web_request.run(args: {method: request_methods, url: string, headers: string?, body: string?}) : string
 
     -- the type checker errors here, but this code is completely valid
     -- it's taken verbatim from the Lune docs.
+
 	local response = net.request({
-        method = method,
-		url = url,
-		headers = headers,
-		body = body,
+        method = args.method,
+		url = args.url,
+		headers = args.headers,
+		body = args.body,
 	})
 	if response.statusCode == 200 then
 		return response.body

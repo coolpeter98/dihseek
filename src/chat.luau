@@ -2,6 +2,7 @@ local classes = require("../luau_packages/classes")
 local builders = require("../luau_packages/builders")
 
 local prompt = require("./deepseek/prompt")
+local call_tool = require("./call_tool")
 
 local chatCommand = builders.interaction.interaction
 	.new()
@@ -34,8 +35,13 @@ function listener(bot)
 		interaction:deferAsync():await()
 		local response = prompt(input, interaction.channelId)
 
-		print(response[1], response[2])
-		interaction:messageAsync(builders.message.message.new():setContent(`{response[1]} \nTool call(s): {response[2].name}`):build()):await()
+		local success, err = pcall(function()
+			if response["tool_name"] then
+				tool_results = call_tool(response["tool_name"], response["tool_arguments"] or {})
+			end
+			interaction:messageAsync(builders.message.message.new():setContent(`{response["reply"]} \nTool call(s): {response["tool_name"]}\nTool results: {tool_results}`):build()):await()
+		end)
+		print(success, err)
 	end)
 end
 
