@@ -10,6 +10,9 @@ local add_message_to_context = require("./add_message_to_context")
 
 local function prompt(message: string, channel_id)
 	add_message_to_context("user", message, channel_id)
+
+	-- the type checker errors here, but this code is completely valid
+	-- it's taken verbatim from the Lune docs.
 	local response = net.request({
 		url = "https://api.deepseek.com/chat/completions",
 		method = "POST",
@@ -31,8 +34,6 @@ local function prompt(message: string, channel_id)
 	else
 		return response.statusCode
 	end
-
-	return serde.decode("json", response.body).choices[1].message.content
 end
 
 return prompt

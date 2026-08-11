@@ -19,6 +19,9 @@ web_request.info = {
 }
 
 function web_request.run(method: request_methods, url: string, headers: string?, body: string?)
+
+    -- the type checker errors here, but this code is completely valid
+    -- it's taken verbatim from the Lune docs.
 	local response = net.request({
         method = method,
 		url = url,

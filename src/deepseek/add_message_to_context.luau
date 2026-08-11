@@ -27,7 +27,6 @@ local function add_message_to_context(role: role, message: string, channel_id)
 		content = message,
 	}
 
-	local new_file_contents
 	table.insert(messages, formatted_message)
 	fs.writeFile(context_file_location, serde.encode("json", messages))
 

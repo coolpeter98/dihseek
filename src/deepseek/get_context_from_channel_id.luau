@@ -3,9 +3,7 @@
 local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 
-local constants = "../constants"
-
-local DEFAULT_SYSTEM_PROMPT = require(`{constants}/DEFAULT_SYSTEM_PROMPT`)
+local DEFAULT_SYSTEM_PROMPT = require("../constants/DEFAULT_SYSTEM_PROMPT")
 
 local add_message_to_context = require("./add_message_to_context")
 
