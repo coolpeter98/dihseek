@@ -1,5 +1,0 @@
-local fs = require("@lune/fs")
-print("tools dir contents:", fs.readDir("src/tools"))
-print("isFile src/tools/get_time.luau:", fs.isFile("src/tools/get_time.luau"))
-local ok, t = pcall(require, "./tools/get_time.luau")
-print("direct require from src/:", ok, t)
