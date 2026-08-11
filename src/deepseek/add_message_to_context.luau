@@ -16,7 +16,8 @@ type message = {
 	content: string,
 }
 
-local function add_message_to_context(role: role, message: string, channel_id)
+-- channel_id is actually a number, but the goofy library passes it as a string...
+local function add_message_to_context(role: role, message: string, channel_id: string) : string
 	local context_file_location = `{contexts}/{channel_id}.json`
 	local messages: { message } = {}
 	if fs.isFile(context_file_location) then

@@ -20,7 +20,7 @@ local bot = discord.bot.new({
 	reconnect = true,
 })
 
-chat.setup(bot)
+	chat.setup(bot)
 
 bot.onAllShardsReady:listenOnce(function()
 	print(`Bot '{bot.user.username}' is online!`)

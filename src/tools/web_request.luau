@@ -7,18 +7,25 @@ local web_request = {}
 type request_methods = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH"
 
 web_request.info = {
+    name = "web_request",
     alias = "Web Request",
     description = [[
-        Returns the current time in EEST.
-        Arguments (asterisk * means required):
-            - *Method: "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH"
-            - *URL: string
-            - Headers: string
-            - Body: string
+        Sends a web request to the specified server.
     ]],
 }
 
-function web_request.run(method: request_methods, url: string, headers: string?, body: string?)
+web_request.parameters = {
+    type = "object",
+    properties = {
+        method = { type = "string", enum = { "GET", "POST", "PUT", "DELETE", "PATCH" } },
+        url = { type = "string" },
+        headers = { type = "object", properties = {} },
+        body = { type = "string" },
+    },
+    required = { "method", "url" },
+}
+
+function web_request.run(method: request_methods, url: string, headers: string?, body: string?) : string
 
     -- the type checker errors here, but this code is completely valid
     -- it's taken verbatim from the Lune docs.
@@ -31,7 +38,7 @@ function web_request.run(method: request_methods, url: string, headers: string?,
 	if response.statusCode == 200 then
 		return response.body
 	else
-		return response.statusCode
+		return `Errored with {response.statusCode}`
 	end
 end
 
