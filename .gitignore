@@ -1,5 +1,6 @@
 # Environment - contains secrets, do not commit
 .env.luau
+src/deepseek/contexts
 
 # Dependency directories
 luau_packages/

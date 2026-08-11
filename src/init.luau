@@ -20,15 +20,49 @@ local bot = discord.bot.new({
 	reconnect = true,
 })
 
-bot.onMessage:listen(function(message: classes.Message)
-	local success, err = pcall(function()
-		prompt(message, message.channelId)
-	end)
-	if not success then print(err) end
-end)
+local chatCommand = builders.interaction.interaction
+	.new()
+	:setName("chat")
+	:setDescription("Chat with DeepSeek")
+	:setType("ChatInput")
+	:addIntegrationType("GuildInstall")
+	:addIntegrationType("UserInstall")
+	:addContext("Guild")
+	:addContext("BotDM")
+	:addContext("PrivateChannel")
+	:addOption(
+		builders.interaction.option
+			.new()
+			:setType("String")
+			:setName("input")
+			:setDescription("Your message to DeepSeek")
+			:setRequired(true)
+			:build()
+	)
+	:build()
 
 bot.onAllShardsReady:listenOnce(function()
 	print(`Bot '{bot.user.username}' is online!`)
+	local result = bot.application:createSlashCommandAsync(chatCommand):await()
+
+	if result:isErr() then
+		warn("Failed to register command:", result:unwrapErr())
+		return
+	end
+
+	print("Registered command:", result:unwrapOk().name)
+end)
+
+bot.onCommandInteraction:listen(function(interaction: classes.TypesCommand)
+	if interaction.data.name ~= "chat" then
+		return
+	end
+
+	local input = interaction:getOption("input").value
+	interaction:deferAsync():await()
+	local response = prompt(input, interaction.channelId)
+
+	interaction:messageAsync(builders.message.message.new():setContent(response):build()):await()
 end)
 
 bot:connectAsync():await()
