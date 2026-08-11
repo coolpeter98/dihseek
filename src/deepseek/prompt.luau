@@ -11,9 +11,6 @@ local get_tools = require("../get_tools")
 -- channel_id is actually a number, but the goofy library passes it as a string...
 local function prompt(message: string, channel_id: string) : any
 	add_message_to_context("user", message, channel_id)
-	local tools = get_tools()
-
-	print(tools[1].info.name)
 
 	-- the type checker errors here, but this code is completely valid
 	-- it's taken verbatim from the Lune docs.
