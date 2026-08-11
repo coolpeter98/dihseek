@@ -35,8 +35,7 @@ function listener(bot)
 		local response = prompt(input, interaction.channelId)
 
 		print(response[1], response[2])
-		interaction:messageAsync(builders.message.message.new():setContent(`{response[1]} 
-Tool call(s): {response[2].name}`):build()):await()
+		interaction:messageAsync(builders.message.message.new():setContent(`{response[1]} \nTool call(s): {response[2].name}`):build()):await()
 	end)
 end
 
