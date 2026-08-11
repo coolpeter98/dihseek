@@ -1,3 +1,5 @@
+--!strict
+
 local get_time = {}
 
 get_time.info = {

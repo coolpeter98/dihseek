@@ -1,3 +1,5 @@
+--!strict
+
 local discord = require("@self/../luau_packages/discord")
 local builders = require("@self/../luau_packages/builders")
 local chat = require("@self/chat")

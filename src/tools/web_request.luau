@@ -1,3 +1,5 @@
+--!strict
+
 local net = require("@lune/net")
 
 local web_request = {}
