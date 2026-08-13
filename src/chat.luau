@@ -32,19 +32,32 @@ function listener(bot)
 		end
 
 		local input = interaction:getOption("input").value
+
 		interaction:deferAsync():await()
-		local response = prompt(input, interaction.channelId)
 
 		-- catch any error ourselves because the default error handler is broken...
 		local success, err = pcall(function()
-			if response["used_tool"] then
-				tool_results = call_tool(response["tool_name"], response["tool_arguments"] or {})
-				interaction:messageAsync(builders.message.message.new():setContent(string.sub(`{response["reply"]} \nTool call(s): {response["tool_name"]}\nTool results: {tool_results}`, 1, 1999), "…"):build()):await()
-				return
+
+		local discord_message = builders.message.message.new()
+			local response = prompt(input, interaction.channelId)
+
+			local discord_message_text = ""
+
+			while response["used_tool"] do
+				response = prompt(nil, interaction.channelId)
+
+				discord_message_text = discord_message_text .. `{response["reply"]}`
+
+				interaction:messageAsync(builders.message.message.new():setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
 			end
-			interaction:messageAsync(builders.message.message.new():setContent(string.sub(`{response["reply"]}`, 1, 1999), "…"):build()):await()
+
+			print(discord_message_text)
+
+			interaction:messageAsync(discord_message:setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
 		end)
-		print(success, err)
+		if not success then
+			print(success, err)
+		end
 	end)
 end
 

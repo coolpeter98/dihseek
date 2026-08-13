@@ -1,17 +1,19 @@
 
 local net = require("@lune/net")
 local serde = require("@lune/serde")
-local task = require("@lune/task")
 
 local env = require("../../.env")
 
 local get_context_from_channel_id = require("./get_context_from_channel_id")
 local add_message_to_context = require("./add_message_to_context")
 local get_tools = require("../get_tools")
+local call_tool = require("../call_tool")
 
 -- channel_id is actually a number, but the goofy library passes it as a string...
-local function prompt(message: string, channel_id: string) : any
-	add_message_to_context("user", message, channel_id)
+local function prompt(message: string | nil, channel_id: string) : any
+	if message then
+		add_message_to_context("user", message, channel_id)
+	end
 
 	-- the type checker errors here, but this code is completely valid
 	-- it's taken verbatim from the Lune docs.
@@ -26,7 +28,7 @@ local function prompt(message: string, channel_id: string) : any
 			model = "deepseek-v4-pro",
 			messages = get_context_from_channel_id(channel_id),
 			thinking = { type = "enabled" },
-			reasoning_effort = "low",
+			reasoning_effort = "high",
 			tools = get_tools(true)
 		}),
 	})
@@ -35,31 +37,47 @@ local function prompt(message: string, channel_id: string) : any
 
 		local reply = decoded.choices[1].message.content
 
-		task.defer(function()
-			add_message_to_context("assistant", reply, channel_id)
-		end)
+		local tool_data = {}
 
-		local used_tool = decoded.choices[1].finish_reason == "tool_calls"
+		tool_data.used_tool = decoded.choices[1].finish_reason == "tool_calls"
 
-		if used_tool then
-			tool_call = decoded.choices[1].message.tool_calls[1]["function"] or nil
+		if tool_data.used_tool then
+			local tool_call = decoded.choices[1].message.tool_calls[1]["function"] or nil
+-- 			print(decoded.choices[1].message.tool_calls)
+
+			tool_data = {
+				used_tool 	= true,
+				name 		= tool_call.name,
+				results 	= call_tool(tool_call.name, serde.decode("json", tool_call.arguments) or {}),
+				id 			= decoded.choices[1].message.tool_calls[1].id,
+				args 		= serde.decode("json", tool_call.arguments)
+			}
+
+			add_message_to_context("assistant", reply, channel_id, tool_data)
+			add_message_to_context("tool", tool_data.results, channel_id, tool_data)
 
 			print(
 				reply,
-				used_tool,
-				tool_call.name,
-				serde.decode("json", tool_call.arguments)
+				tool_data.used_tool,
+				tool_data.name,
+				tool_data.args,
+				tool_data.id,
+				tool_data.results
 			)
 
 			return {
-				reply = reply,
-				used_tool = used_tool,
-				tool_name = tool_call.name,
-				tool_arguments = serde.decode("json", tool_call.arguments),
+				reply 			= reply,
+				used_tool 		= tool_data.used_tool,
+				tool_name 		= tool_data.name,
+				tool_args 		= tool_data.args,
+				tool_id 		= tool_data.id,
+				tool_results 	= tool_data.results
 			}
 		end
 
-		-- didn't use any tools so just return the reply
+	add_message_to_context("assistant", reply, channel_id, nil)
+
+	-- didn't use any tools so just return the reply
 
 		return {
 			reply = reply,

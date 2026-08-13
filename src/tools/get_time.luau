@@ -16,8 +16,8 @@ get_time.parameters = {
 }
 
 -- TODO actually format this as a proper date instead of just the clock
-function get_time.run() : number
-	return os.clock()
+function get_time.run() : string
+	return tostring(os.clock())
 end
 
 return get_time
