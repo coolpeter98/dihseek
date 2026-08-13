@@ -51,7 +51,9 @@ function listener(bot)
 				interaction:messageAsync(builders.message.message.new():setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
 			end
 
-			print(discord_message_text)
+			if discord_message_text == "" then
+				discord_message_text = `{response["reply"]}`
+			end
 
 			interaction:messageAsync(discord_message:setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
 		end)
