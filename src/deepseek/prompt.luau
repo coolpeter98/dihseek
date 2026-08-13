@@ -1,6 +1,7 @@
 
 local net = require("@lune/net")
 local serde = require("@lune/serde")
+local task = require("@lune/task")
 
 local env = require("../../.env")
 
@@ -30,16 +31,30 @@ local function prompt(message: string, channel_id: string) : any
 		}),
 	})
 	if response.statusCode == 200 then
-		local reply = serde.decode("json", response.body).choices[1].message.content
-		local tool_call = serde.decode("json", response.body).choices[1].message.tool_calls[1]["function"]
+		local decoded = serde.decode("json", response.body)
 
-		print(serde.decode("json", tool_call.arguments))
+		local reply = decoded.choices[1].message.content
 
-		add_message_to_context("assistant", reply, channel_id)
+		task.defer(function()
+			add_message_to_context("assistant", reply, channel_id)
+		end)
+
+		local used_tool = decoded.choices[1].finish_reason == "tool_calls"
+
+		if used_tool then
+			tool_call = decoded.choices[1].message.tool_calls[1]["function"] or nil
+
+			return {
+				reply = reply,
+				used_tool = used_tool,
+				tool_name = tool_call.name,
+				tool_arguments = serde.decode("json", tool_call.arguments),
+			}
+		end
+
+		-- didn't use any tools so just return the reply
 		return {
 			reply = reply,
-			tool_name = tool_call.name,
-			tool_arguments = serde.decode("json", tool_call.arguments),
 		}
 	else
 		return `Error: {response.statusCode}`

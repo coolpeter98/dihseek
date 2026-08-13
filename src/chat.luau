@@ -35,11 +35,14 @@ function listener(bot)
 		interaction:deferAsync():await()
 		local response = prompt(input, interaction.channelId)
 
+		-- catch any error ourselves because the default error handler is broken...
 		local success, err = pcall(function()
-			if response["tool_name"] then
+			if response["used_tool"] then
 				tool_results = call_tool(response["tool_name"], response["tool_arguments"] or {})
+				interaction:messageAsync(builders.message.message.new():setContent(`{response["reply"]} \nTool call(s): {response["tool_name"]}\nTool results: {tool_results}`):build()):await()
+				return
 			end
-			interaction:messageAsync(builders.message.message.new():setContent(`{response["reply"]} \nTool call(s): {response["tool_name"]}\nTool results: {tool_results}`):build()):await()
+			interaction:messageAsync(builders.message.message.new():setContent(`{response["reply"]}`):build()):await()
 		end)
 		print(success, err)
 	end)
