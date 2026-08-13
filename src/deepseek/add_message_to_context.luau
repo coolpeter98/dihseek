@@ -3,6 +3,8 @@
 local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 
+local DEFAULT_SYSTEM_PROMPT = require("../constants/DEFAULT_SYSTEM_PROMPT")
+
 local contexts = "src/deepseek/contexts/"
 
 if not fs.isDir(contexts) then
@@ -37,7 +39,10 @@ local function add_message_to_context(role: role, message: string, channel_id: s
 	local messages: { message } = {}
 	if fs.isFile(context_file_location) then
 		messages = serde.decode("json", fs.readFile(context_file_location))
+	else
+		messages = {{role = "system", content = DEFAULT_SYSTEM_PROMPT}}
 	end
+
 	local formatted_message = {
 		role = role,
 		content = message,
