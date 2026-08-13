@@ -39,10 +39,10 @@ function listener(bot)
 		local success, err = pcall(function()
 			if response["used_tool"] then
 				tool_results = call_tool(response["tool_name"], response["tool_arguments"] or {})
-				interaction:messageAsync(builders.message.message.new():setContent(`{response["reply"]} \nTool call(s): {response["tool_name"]}\nTool results: {tool_results}`):build()):await()
+				interaction:messageAsync(builders.message.message.new():setContent(string.sub(`{response["reply"]} \nTool call(s): {response["tool_name"]}\nTool results: {tool_results}`, 1, 1999), "…"):build()):await()
 				return
 			end
-			interaction:messageAsync(builders.message.message.new():setContent(`{response["reply"]}`):build()):await()
+			interaction:messageAsync(builders.message.message.new():setContent(string.sub(`{response["reply"]}`, 1, 1999), "…"):build()):await()
 		end)
 		print(success, err)
 	end)

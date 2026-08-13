@@ -25,7 +25,7 @@ local function prompt(message: string, channel_id: string) : any
 		body = serde.encode("json", {
 			model = "deepseek-v4-pro",
 			messages = get_context_from_channel_id(channel_id),
-			thinking = { type = "disabled" },
+			thinking = { type = "enabled" },
 			reasoning_effort = "low",
 			tools = get_tools(true)
 		}),
@@ -44,6 +44,13 @@ local function prompt(message: string, channel_id: string) : any
 		if used_tool then
 			tool_call = decoded.choices[1].message.tool_calls[1]["function"] or nil
 
+			print(
+				reply,
+				used_tool,
+				tool_call.name,
+				serde.decode("json", tool_call.arguments)
+			)
+
 			return {
 				reply = reply,
 				used_tool = used_tool,
@@ -53,6 +60,7 @@ local function prompt(message: string, channel_id: string) : any
 		end
 
 		-- didn't use any tools so just return the reply
+
 		return {
 			reply = reply,
 		}
