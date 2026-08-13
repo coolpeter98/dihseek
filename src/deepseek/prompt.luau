@@ -27,7 +27,7 @@ local function prompt(message: string | nil, channel_id: string) : any
 		body = serde.encode("json", {
 			model = "deepseek-v4-pro",
 			messages = get_context_from_channel_id(channel_id),
-			thinking = { type = "enabled" },
+			thinking = { type = "disabled" },
 			reasoning_effort = "high",
 			tools = get_tools(true)
 		}),
