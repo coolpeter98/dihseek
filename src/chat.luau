@@ -2,6 +2,7 @@ local classes = require("../luau_packages/classes")
 local builders = require("../luau_packages/builders")
 
 local task = require("@lune/task")
+local datetime = require("@lune/datetime")
 
 local prompt = require("./deepseek/prompt")
 local call_tool = require("./call_tool")
@@ -43,7 +44,6 @@ function listener(bot)
 			local username = interaction.member.username or interaction.user.username
 			local displayname = interaction.member.globalName or interaction.user.globalName
 
-
 			local input = interaction:getOption("input").value
 
 			interaction:deferAsync():await()
@@ -52,7 +52,7 @@ function listener(bot)
 			local success, err = pcall(function()
 
 			local discord_message = builders.message.message.new()
-				local response = prompt(`[USER ID: {userid}] {displayname} (@{username}): {input}`, interaction.channelId)
+				local response = prompt(`[USER ID: {userid}] {displayname} (@{username}) at {datetime.now():formatUniversalTime("%Y-%m-%d %H:%M:%S UTC")}: {input}`, interaction.channelId)
 
 				local formatted_input = '```\n'..input..'\n```'
 
