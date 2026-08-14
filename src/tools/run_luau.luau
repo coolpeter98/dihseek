@@ -17,7 +17,8 @@ run_luau.info = {
     alias = "Run Luau",
     description = [[
         Runs Luau in the Lune environment.
-        You can only require paths in this whitelist:
+        The tool returns the return value of the function you ran and the value of print statements.
+        For safety reasons, you can only require paths in this whitelist:
         ]]
         .. table.concat(allowed_requires) ..
         [[
@@ -60,7 +61,7 @@ function run_luau.run(args: {code: string})
 
         for i, print_statements in ipairs(prints) do
             stringified_prints = stringified_prints .. `Print statement {i}:`
-            for _, print_statement in prints[i] do
+            for _, print_statement in print_statements[i] do
                 stringified_prints = stringified_prints .. tostring(print_statement) .. ",\n"
             end
         end

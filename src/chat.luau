@@ -55,9 +55,11 @@ function listener(bot)
 			local discord_message_text = ""
 
 			while response["used_tool"] do
+				discord_message_text = discord_message_text .. `-# Used tool: {response.tool_name}\n`
+
 				response = prompt(nil, interaction.channelId)
 
-				discord_message_text = discord_message_text .. `{response["reply"]}`
+				discord_message_text = discord_message_text .. `{response["reply"]}\n`
 
 				interaction:messageAsync(builders.message.message.new():setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
 			end
