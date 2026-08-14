@@ -1,4 +1,4 @@
-# Environment - contains secrets, do not commit
+# Environment
 .env.luau
 src/deepseek/contexts
 

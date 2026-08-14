@@ -25,7 +25,7 @@ local function prompt(message: string | nil, channel_id: string) : any
 			Authorization = `Bearer {env.DEEPSEEK_API_KEY}`,
 		},
 		body = serde.encode("json", {
-			model = "deepseek-v4-pro",
+			model = "deepseek-v4-flash",
 			messages = get_context_from_channel_id(channel_id),
 			thinking = { type = "disabled" },
 			reasoning_effort = "high",

@@ -6,10 +6,6 @@ local function get_tools(format_for_api: boolean, single_tool: string?) : {}
 
     for i, file in fs.readDir(tools) do
 
-        if file == "README.txt" then
-            continue
-        end
-
         -- strip luau file extension
         local stripped_file = string.split(file, ".")[1]
 
