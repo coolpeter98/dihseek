@@ -57,18 +57,18 @@ function listener(bot)
 			while response["used_tool"] do
 				discord_message_text = discord_message_text .. `-# Used tool: {response.tool_name}\n`
 
+				interaction:messageAsync(discord_message:setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
+
 				response = prompt(nil, interaction.channelId)
 
 				discord_message_text = discord_message_text .. `{response["reply"]}\n`
 
-				interaction:messageAsync(builders.message.message.new():setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
+				interaction:messageAsync(discord_message:setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
 			end
 
 			if discord_message_text == "" then
 				discord_message_text = `{response["reply"]}`
 			end
-
-			interaction:messageAsync(discord_message:setContent(string.sub(discord_message_text, 1, 1999), "…"):build()):await()
 		end)
 		if not success then
 			print(success, err)
