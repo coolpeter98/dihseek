@@ -34,10 +34,13 @@ function listener(bot)
 		-- discord does ts differently depending on
 		-- if the user is running a command in a
 		-- server or a DM. Goofy.
+
 		if interaction.member then
+			userid = interaction.member.id
 			username = interaction.member.username
 			displayname = interaction.member.globalName
 		else
+			userid = interaction.user.id
 			username = interaction.user.username
 			displayname = interaction.user.globalName
 		end
@@ -50,7 +53,7 @@ function listener(bot)
 		local success, err = pcall(function()
 
 		local discord_message = builders.message.message.new()
-			local response = prompt(`{displayname} (@{username}): {input}`, interaction.channelId)
+			local response = prompt(`[USER ID: {userid}] {displayname} (@{username}): {input}`, interaction.channelId)
 
 			local discord_message_text = ""
 
