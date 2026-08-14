@@ -39,15 +39,10 @@ function listener(bot)
 			-- if the user is running a command in a
 			-- server or a DM. Goofy.
 
-			if interaction.member then
-				userid = interaction.member.id
-				username = interaction.member.username
-				displayname = interaction.member.globalName
-			else
-				userid = interaction.user.id
-				username = interaction.user.username
-				displayname = interaction.user.globalName
-			end
+			local userid = interaction.member.id or interaction.user.id
+			local username = interaction.member.username or interaction.user.username
+			local displayname = interaction.member.globalName or interaction.user.globalName
+
 
 			local input = interaction:getOption("input").value
 
