@@ -1,12 +1,14 @@
 --!strict
 
+local datetime = require("@lune/datetime")
+
 local get_time = {}
 
 get_time.info = {
 	name = "get_time",
 	alias = "Get current time",
 	description = [[
-		Returns the current time in EEST.
+		Returns the current time in UTC.
 	]],
 }
 
@@ -15,9 +17,8 @@ get_time.parameters = {
 	properties = {},
 }
 
--- TODO actually format this as a proper date instead of just the clock
 function get_time.run() : string
-	return tostring(os.clock())
+	return datetime.now():formatUniversalTime("%Y-%m-%d %H:%M:%S UTC")
 end
 
 return get_time
