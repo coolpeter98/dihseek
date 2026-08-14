@@ -1,3 +1,5 @@
+--!strict
+
 local get_tools = require("./get_tools")
 local call_tool = require("./call_tool")
 

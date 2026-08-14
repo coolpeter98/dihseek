@@ -1,3 +1,5 @@
+--!strict
+
 local get_tools = require("./get_tools")
 
 local function call_tool(tool: string, args: {})

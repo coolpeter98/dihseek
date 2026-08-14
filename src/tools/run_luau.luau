@@ -1,3 +1,5 @@
+--!strict
+
 local luau = require("@lune/luau")
 
 local prints: {{any}} = {}

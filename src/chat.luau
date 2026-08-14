@@ -1,6 +1,8 @@
+--!strict
+
 local classes = require("../luau_packages/classes")
 local builders = require("../luau_packages/builders")
-
+local datetime = require("@lune/datetime")
 local task = require("@lune/task")
 local datetime = require("@lune/datetime")
 
@@ -40,9 +42,19 @@ function listener(bot)
 			-- if the user is running a command in a
 			-- server or a DM. Goofy.
 
-			local userid = interaction.member.id or interaction.user.id
-			local username = interaction.member.username or interaction.user.username
-			local displayname = interaction.member.globalName or interaction.user.globalName
+			local userid
+			local username
+			local displayname
+
+			if interaction.member then
+				userid = interaction.member.id
+				username = interaction.member.username
+				displayname = interaction.member.globalName
+			else
+				userid = interaction.user.id
+				username = interaction.user.username
+				displayname = interaction.user.globalName
+			end
 
 			local input = interaction:getOption("input").value
 
